@@ -1,25 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import * as BooksAPI from "./BooksAPI";
+import "./App.css";
+import Bookshelf from "./components/Bookshelf";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import { useNavigate } from "react-router-dom";
 
-function App() {
+const bookshelves = [
+  { title: "Currently Reading", shelfName: "currentlyReading" },
+  { title: "Want to Read", shelfName: "wantToRead" },
+  { title: "Read", shelfName: "read" },
+];
+
+const App = () => {
+  const [books, setBooks] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    BooksAPI.getAll().then((booksFromApi) => {
+      setBooks(booksFromApi);
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Header />
+      <div className="list-books">
+        <div className="list-books-content">
+          <div>
+            {bookshelves.map((bookshelf, index) => (
+              <Bookshelf
+                key={index}
+                title={bookshelf.title}
+                books={
+                  books &&
+                  books.filter(
+                    (book) => book && book.shelf === bookshelf.shelfName
+                  )
+                }
+                setBooks={setBooks}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="open-search">
+          <button onClick={() => navigate("/search")}>Add a book</button>
+        </div>
+      </div>
+      <Footer />
     </div>
   );
-}
+};
 
 export default App;
