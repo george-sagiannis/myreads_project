@@ -1,16 +1,17 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import App from "./App";
 import Search from "./components/Search";
-
 import "./index.css";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+const root = createRoot(document.getElementById("root"));
+
+root.render(
   <Router>
     <Routes>
-      <Route path="/" element={<App />} />{" "}
-      <Route path="/search" element={<Search />} />{" "}
+      <Route path="/" element={<App />} />
+      <Route path="/search" element={<Search />} />
     </Routes>
   </Router>
 );
