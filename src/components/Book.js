@@ -5,19 +5,26 @@ const Book = (props) => {
   const { title, authors, imageUrl, book, setBooks, isSearching, bookshelf } =
     props;
 
+  const updateBookShelf = (book, shelf) => {
+    book.shelf = shelf;
+    BooksAPI.update(book, shelf).then(() => {
+      setBooks((books) => {
+        return [...books.filter((b) => b.id !== book.id), book];
+      });
+    });
+  };
+
   const handleShelfChange = (event) => {
-    if (event.target.value !== "move") {
-      BooksAPI.update(book, event.target.value).then((response) =>
-        BooksAPI.getAll().then((newBooks) => {
-          setBooks(newBooks);
-        })
-      );
+    const newShelf = event.target.value;
+    if (newShelf !== "move") {
+      updateBookShelf(book, newShelf);
     }
   };
 
   const handleShelfChangeInSearch = (event) => {
-    if (event.target.value !== "move") {
-      BooksAPI.update(book, event.target.value);
+    const newShelf = event.target.value;
+    if (newShelf !== "move") {
+      updateBookShelf(book, newShelf);
     }
   };
 
@@ -47,8 +54,8 @@ const Book = (props) => {
               Move to...
             </option>
             <option value="currentlyReading">Currently Reading</option>
-            <option value="wantToRead">Want to Read.</option>
-            <option value="read">Read.</option>
+            <option value="wantToRead">Want to Read</option>
+            <option value="read">Read</option>
             <option value="none">None</option>
           </select>
         </div>
