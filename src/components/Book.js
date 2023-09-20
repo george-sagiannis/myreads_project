@@ -1,34 +1,23 @@
 import React from "react";
 import * as BooksAPI from "../BooksAPI";
 import PropTypes from "prop-types";
-
 const Book = (props) => {
   const { title, authors, imageUrl, book, setBooks, isSearching, bookshelf } =
     props;
 
-  const updateBookShelf = (book, shelf) => {
-    // console.log("Book:", book);
-    // console.log("Shelf:", shelf);
-
-    book.shelf = shelf;
-    BooksAPI.update(book, shelf).then(() => {
-      setBooks((books) => {
-        return [...books.filter((b) => b.id !== book.id), book];
-      });
-    });
-  };
-
   const handleShelfChange = (event) => {
-    const newShelf = event.target.value;
-    if (newShelf !== "move") {
-      updateBookShelf(book, newShelf);
+    if (event.target.value !== "move") {
+      BooksAPI.update(book, event.target.value).then((response) =>
+        BooksAPI.getAll().then((newBooks) => {
+          setBooks(newBooks);
+        })
+      );
     }
   };
 
   const handleShelfChangeInSearch = (event) => {
-    const newShelf = event.target.value;
-    if (newShelf !== "move") {
-      updateBookShelf(book, newShelf);
+    if (event.target.value !== "move") {
+      BooksAPI.update(book, event.target.value);
     }
   };
 
@@ -89,7 +78,6 @@ Book.propTypes = {
   authors: PropTypes.arrayOf(PropTypes.string),
   imageUrl: PropTypes.string,
   book: PropTypes.object.isRequired,
-  setBooks: PropTypes.func.isRequired,
   isSearching: PropTypes.bool,
   bookshelf: PropTypes.string,
 };
