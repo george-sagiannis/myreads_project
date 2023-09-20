@@ -1,23 +1,31 @@
 import React from "react";
 import * as BooksAPI from "../BooksAPI";
 import PropTypes from "prop-types";
+
 const Book = (props) => {
   const { title, authors, imageUrl, book, setBooks, isSearching, bookshelf } =
     props;
 
+  const updateBookShelf = (book, shelf) => {
+    book.shelf = shelf;
+    BooksAPI.update(book, shelf).then(() => {
+      setBooks((books) => {
+        return [...books.filter((b) => b.id !== book.id), book];
+      });
+    });
+  };
+
   const handleShelfChange = (event) => {
-    if (event.target.value !== "move") {
-      BooksAPI.update(book, event.target.value).then((response) =>
-        BooksAPI.getAll().then((newBooks) => {
-          setBooks(newBooks);
-        })
-      );
+    const newShelf = event.target.value;
+    if (newShelf !== "move") {
+      updateBookShelf(book, newShelf);
     }
   };
 
   const handleShelfChangeInSearch = (event) => {
-    if (event.target.value !== "move") {
-      BooksAPI.update(book, event.target.value);
+    const newShelf = event.target.value;
+    if (newShelf !== "move") {
+      updateBookShelf(book, newShelf);
     }
   };
 
@@ -73,11 +81,17 @@ const Book = (props) => {
   );
 };
 
+// Set a default prop for setBooks
+Book.defaultProps = {
+  setBooks: () => {}, // Provide a default empty function
+};
+
 Book.propTypes = {
   title: PropTypes.string.isRequired,
   authors: PropTypes.arrayOf(PropTypes.string),
   imageUrl: PropTypes.string,
   book: PropTypes.object.isRequired,
+  setBooks: PropTypes.func.isRequired,
   isSearching: PropTypes.bool,
   bookshelf: PropTypes.string,
 };

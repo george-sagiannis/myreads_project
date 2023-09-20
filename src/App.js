@@ -5,7 +5,6 @@ import Bookshelf from "./components/Bookshelf";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 
 const bookshelves = [
   { title: "Currently Reading", shelfName: "currentlyReading" },
@@ -51,11 +50,6 @@ const App = () => {
       <Footer />
     </div>
   );
-};
-
-App.propTypes = {
-  books: PropTypes.array.isRequired,
-  setBooks: PropTypes.func.isRequired,
 };
 
 export default App;
