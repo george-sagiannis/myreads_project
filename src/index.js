@@ -10,7 +10,10 @@ const root = createRoot(document.getElementById("root"));
 root.render(
   <Router>
     <Routes>
-      <Route path="/" element={<App />} />
+      <Route
+        path="/"
+        element={<App books={[]} setBooks={() => {}} />} // i passed books and setBooks props here!!!
+      />
       <Route path="/search" element={<Search />} />
     </Routes>
   </Router>
